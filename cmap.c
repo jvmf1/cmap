@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-smap* smap_create(size_t size) {
-	smap *map = malloc(sizeof(smap));
+cmap* cmap_create(size_t size) {
+	cmap *map = malloc(sizeof(cmap));
 	if (map==NULL) return NULL;
 	map->size=size;
 	map->free_data_function=NULL;
-	map->entries=malloc(sizeof(smap_entry*)*size);
+	map->entries=malloc(sizeof(cmap_entry*)*size);
 	if (map->entries==NULL) return NULL;
 	for (size_t i=0;i<size;i++) {
 		map->entries[i]=NULL;
@@ -16,14 +16,14 @@ smap* smap_create(size_t size) {
 	return map;
 }
 
-void smap_free(smap *m) {
+void cmap_free(cmap *m) {
 	for (size_t i=0;i<m->size;i++) {
 		if (m->entries[i]==NULL) continue;
-		smap_entry *tmp = m->entries[i];
-		smap_entry *next;
+		cmap_entry *tmp = m->entries[i];
+		cmap_entry *next;
 		while (tmp!=NULL) {
 			next = tmp->next;
-			smap_entry_free(m, tmp);
+			cmap_entry_free(m, tmp);
 			tmp=next;
 		}
 	}
@@ -31,7 +31,7 @@ void smap_free(smap *m) {
 	free(m);
 }
 
-size_t smap_hash(const char *str, smap* m) {
+size_t cmap_hash(const char *str, cmap* m) {
 	size_t hash = 5381;
 	char ch;
 
@@ -43,8 +43,8 @@ size_t smap_hash(const char *str, smap* m) {
 	return hash % m->size;
 }
 
-smap_entry* smap_entry_create(const char *key, void *data) {
-	smap_entry *entry = malloc(sizeof(smap_entry));
+cmap_entry* cmap_entry_create(const char *key, void *data) {
+	cmap_entry *entry = malloc(sizeof(cmap_entry));
 	if (entry==NULL) return NULL;
 	entry->key=malloc(strlen(key)+1);
 	if (entry->key==NULL) {
@@ -57,20 +57,20 @@ smap_entry* smap_entry_create(const char *key, void *data) {
 	return entry;
 }
 
-void smap_entry_free(smap *m, smap_entry *entry) {
+void cmap_entry_free(cmap *m, cmap_entry *entry) {
 	free(entry->key);
 	if (m->free_data_function!=NULL)
 		m->free_data_function(entry->data);
 	free(entry);
 }
 
-int smap_insert(smap *m, const char *key, void *data) {
-	size_t hash = smap_hash(key, m);
-	smap_entry *tmp = m->entries[hash];
-	smap_entry *last;
+int cmap_insert(cmap *m, const char *key, void *data) {
+	size_t hash = cmap_hash(key, m);
+	cmap_entry *tmp = m->entries[hash];
+	cmap_entry *last;
 	if (tmp==NULL) {
 		// is empty
-		m->entries[hash]=smap_entry_create(key, data);
+		m->entries[hash]=cmap_entry_create(key, data);
 		if (m->entries[hash]==NULL) return -1;
 		return 0;
 	}
@@ -86,34 +86,34 @@ int smap_insert(smap *m, const char *key, void *data) {
 		last=tmp;
 		tmp=tmp->next;
 	}
-	tmp=smap_entry_create(key, data);
+	tmp=cmap_entry_create(key, data);
 	if (tmp==NULL) return -1;
 	last->next=tmp;
 	return 0;
 }
 
-int smap_remove(smap *m, const char *key) {
-	size_t hash = smap_hash(key, m);
-	smap_entry *tmp = m->entries[hash];
-	smap_entry *last=NULL;
+int cmap_remove(cmap *m, const char *key) {
+	size_t hash = cmap_hash(key, m);
+	cmap_entry *tmp = m->entries[hash];
+	cmap_entry *last=NULL;
 
 	while (tmp!=NULL) {
 		if (strcmp(key, tmp->key)==0) {
 			if (last==NULL) {
 				if (tmp->next==NULL) {
 					// is the first and only
-					smap_entry_free(m, tmp);
+					cmap_entry_free(m, tmp);
 					m->entries[hash]=NULL;
 					return 0;
 				} else {
 					// is the first
 					m->entries[hash]=tmp->next;
-					smap_entry_free(m, tmp);
+					cmap_entry_free(m, tmp);
 					return 0;
 				}
 			}
 			last->next=tmp->next;
-			smap_entry_free(m, tmp);
+			cmap_entry_free(m, tmp);
 			return 0;
 		}
 		last=tmp;
@@ -122,9 +122,9 @@ int smap_remove(smap *m, const char *key) {
 	return -1;
 }
 
-void* smap_get(smap *m, const char *key) {
-	size_t hash = smap_hash(key, m);
-	smap_entry *tmp = m->entries[hash];
+void* cmap_get(cmap *m, const char *key) {
+	size_t hash = cmap_hash(key, m);
+	cmap_entry *tmp = m->entries[hash];
 
 	while (tmp!=NULL) {
 		if (strcmp(key, tmp->key)==0) {
@@ -135,11 +135,11 @@ void* smap_get(smap *m, const char *key) {
 	return NULL;
 }
 
-void smap_print(smap *m) {
+void cmap_print(cmap *m) {
 	printf("map:%p size:%zu\n", m, m->size);
 	for (size_t i=0;i<m->size;i++) {
 		if (m->entries[i]==NULL) continue;
-		smap_entry *tmp = m->entries[i];
+		cmap_entry *tmp = m->entries[i];
 		printf("\tentry[%zu]\n", i);
 		while (tmp!=NULL) {
 			printf("\t\t%p key:'%s' data:%p next:%p\n", tmp, tmp->key, tmp->data, tmp->next);
@@ -148,17 +148,17 @@ void smap_print(smap *m) {
 	}
 }
 
-smap* smap_resize(smap *m, size_t size) {
-	smap *new_map = smap_create(size);
+cmap* cmap_resize(cmap *m, size_t size) {
+	cmap *new_map = cmap_create(size);
 	if (new_map==NULL) return NULL;
 	new_map->free_data_function=m->free_data_function;
 
 	for (size_t i=0;i<m->size;i++) {
 		if (m->entries[i]==NULL) continue;
-		smap_entry *tmp = m->entries[i];
+		cmap_entry *tmp = m->entries[i];
 		while (tmp!=NULL) {
-			if (smap_insert(new_map, tmp->key, tmp->data)<0) {
-				smap_free(new_map);
+			if (cmap_insert(new_map, tmp->key, tmp->data)<0) {
+				cmap_free(new_map);
 				return NULL;
 			}
 			tmp=tmp->next;

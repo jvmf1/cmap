@@ -1,36 +1,36 @@
 #pragma once
 #include <stddef.h>
 
-typedef struct smap_entry {
+typedef struct cmap_entry {
 	char *key;
 	void *data;
-	struct smap_entry *next;
-} smap_entry;
+	struct cmap_entry *next;
+} cmap_entry;
 
-typedef struct smap {
+typedef struct cmap {
 	size_t size;
-	smap_entry **entries;
+	cmap_entry **entries;
 	void (*free_data_function)(void*);
-} smap;
+} cmap;
 
 
-smap* smap_create(size_t size);
+cmap* cmap_create(size_t size);
 
-void smap_free(smap *map);
+void cmap_free(cmap *map);
 
-size_t smap_hash(const char *str, smap* m);
+size_t cmap_hash(const char *str, cmap* m);
 
-smap_entry* smap_entry_create(const char *key, void *data);
+cmap_entry* cmap_entry_create(const char *key, void *data);
 
-void smap_entry_free(smap *m, smap_entry *entry);
+void cmap_entry_free(cmap *m, cmap_entry *entry);
 
-int smap_insert(smap *m, const char *key, void *data);
+int cmap_insert(cmap *m, const char *key, void *data);
 
-int smap_remove(smap *m, const char *key);
+int cmap_remove(cmap *m, const char *key);
 
-void* smap_get(smap *m, const char *key);
+void* cmap_get(cmap *m, const char *key);
 
-void smap_print(smap *m);
+void cmap_print(cmap *m);
 
-// smap_resize does not free the original map
-smap* smap_resize(smap *m, size_t size);
+// cmap_resize does not free the original map
+cmap* cmap_resize(cmap *m, size_t size);

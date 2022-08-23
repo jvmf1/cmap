@@ -2,11 +2,11 @@
 #include <stdio.h>
 
 int main() {
-	// smap_create(map_size)
-	smap *map = smap_create(10);
-	smap_insert(map, "key", "value");
-	printf("%s\n", (char*)smap_get(map, "key"));
-	smap_remove(map, "key");
-	printf("%p\n", smap_get(map, "key"));
-	smap_free(map);
+	// cmap_create(map_size)
+	cmap *map = cmap_create(10);
+	cmap_insert(map, "key", "value");
+	printf("%s\n", (char*)cmap_get(map, "key"));
+	cmap_remove(map, "key");
+	printf("%p\n", cmap_get(map, "key"));
+	cmap_free(map);
 }

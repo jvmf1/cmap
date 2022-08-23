@@ -19,7 +19,7 @@ install: lib$(NAME).a
 	cp -f $(NAME).h $(INCLUDEDESTDIR)
 
 example: example.c lib$(NAME).a
-	$(CC) $< lib$(NAME).a -o $@
+	$(CC) $< lib$(NAME).a -Wall -o $@
 
 uninstall:
 	rm -f $(LIBDESTDIR)/lib$(NAME).a
