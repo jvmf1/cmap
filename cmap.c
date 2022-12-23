@@ -3,13 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-cmap* cmap_create(size_t size, bool (*compare_key_function)(void*,void*), size_t (*hash_function)(void*), void (*free_data_function)(void*),
-		void (*free_key_function)(void*)) {
+cmap* cmap_create(size_t size, bool (*compare_key_function)(void*,void*), size_t (*hash_function)(void*)) {
 	cmap *map = malloc(sizeof(cmap));
 	if (map==NULL) return NULL;
 	map->size=size;
-	map->free_data_function=free_data_function;
-	map->free_key_function=free_key_function;
 	map->compare_key_function=compare_key_function;
 	map->hash_function=hash_function;
 	map->entries=malloc(sizeof(cmap_entry*)*size);
@@ -137,7 +134,7 @@ void cmap_print(cmap *m) {
 }
 
 cmap* cmap_resize(cmap *m, size_t size) {
-	cmap *new_map = cmap_create(size, m->compare_key_function, m->hash_function, NULL, NULL);
+	cmap *new_map = cmap_create(size, m->compare_key_function, m->hash_function);
 	if (new_map==NULL) return NULL;
 
 	for (size_t i=0;i<m->size;i++) {
