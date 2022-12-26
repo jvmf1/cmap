@@ -25,7 +25,7 @@ cmap_entry* cmap_entry_create(void *key, void *data);
 
 void cmap_entry_free(cmap *m, cmap_entry *entry);
 
-int cmap_insert(cmap *m, void *key, void *data);
+int cmap_set(cmap *m, void *key, void *data);
 
 int cmap_remove(cmap *m, void *key);
 
