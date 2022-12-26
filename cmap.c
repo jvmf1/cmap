@@ -56,8 +56,8 @@ int cmap_set(cmap *m, void *key, void *data) {
 	if (tmp==NULL) {
 		// is empty
 		m->entries[hash]=cmap_entry_create(key, data);
-		if (m->entries[hash]==NULL) return -1;
-		return 0;
+		if (m->entries[hash]==NULL) return 0;
+		return 1;
 	}
 
 	while (tmp!=NULL) {
@@ -66,15 +66,15 @@ int cmap_set(cmap *m, void *key, void *data) {
 			if (m->free_data_function!=NULL)
 				m->free_data_function(tmp->data);
 			tmp->data=data;
-			return 0;
+			return 1;
 		}
 		last=tmp;
 		tmp=tmp->next;
 	}
 	tmp=cmap_entry_create(key, data);
-	if (tmp==NULL) return -1;
+	if (tmp==NULL) return 0;
 	last->next=tmp;
-	return 0;
+	return 1;
 }
 
 int cmap_remove(cmap *m, void *key) {
@@ -89,22 +89,22 @@ int cmap_remove(cmap *m, void *key) {
 					// is the first and only
 					cmap_entry_free(m, tmp);
 					m->entries[hash]=NULL;
-					return 0;
+					return 1;
 				} else {
 					// is the first
 					m->entries[hash]=tmp->next;
 					cmap_entry_free(m, tmp);
-					return 0;
+					return 1;
 				}
 			}
 			last->next=tmp->next;
 			cmap_entry_free(m, tmp);
-			return 0;
+			return 1;
 		}
 		last=tmp;
 		tmp=tmp->next;
 	}
-	return -1;
+	return 0;
 }
 
 void* cmap_get(cmap *m, void *key) {
