@@ -6,7 +6,7 @@ CFLAGS=-ffunction-sections -fdata-sections
 
 all: lib$(NAME).a
 
-.PHONE: all clean install uninstall clean
+.PHONY: all clean install uninstall clean
 
 $(NAME).o: $(NAME).c $(NAME).h
 	$(CC) $(CFLAGS) $< -c -o $@
