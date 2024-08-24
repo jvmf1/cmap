@@ -49,7 +49,7 @@ void cmap_entry_free(cmap *m, cmap_entry *entry) {
 	free(entry);
 }
 
-int cmap_insert(cmap *m, void *key, void *data) {
+int cmap_set(cmap *m, void *key, void *data) {
 	size_t hash = m->hash_function(key) % m->size;
 	cmap_entry *tmp = m->entries[hash];
 	cmap_entry *last;
@@ -141,7 +141,7 @@ cmap* cmap_resize(cmap *m, size_t size) {
 		if (m->entries[i]==NULL) continue;
 		cmap_entry *tmp = m->entries[i];
 		while (tmp!=NULL) {
-			if (cmap_insert(new_map, tmp->key, tmp->data)<0) {
+			if (cmap_set(new_map, tmp->key, tmp->data)<0) {
 				cmap_free(new_map);
 				return NULL;
 			}
