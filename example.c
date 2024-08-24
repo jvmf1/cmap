@@ -30,7 +30,7 @@ size_t hash_int(void *p) {
 }
 
 int main() {
-	// cmap_create(map_size, compare_function, hash_function
+	// cmap_create(map_size, compare_key_function, hash_key_function)
 	cmap *map = cmap_create(10, compare_str, hash_str);
 	cmap_set(map, "key", "value");
 	printf("%s\n", (char*)cmap_get(map, "key"));
