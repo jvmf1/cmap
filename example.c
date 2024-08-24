@@ -40,9 +40,8 @@ int main() {
 	printf("%p\n", cmap_get(map, "key"));
 	cmap_free(map);
 
-	int i_key = 15;
 	cmap *int_map = cmap_create(10, compare_int, hash_int, NULL, NULL);
-	cmap_insert(int_map, &i_key, "fifteen");
-	printf("%s\n", (char*)cmap_get(int_map, &i_key));
+	cmap_insert(int_map, (int[]){15}, "fifteen");
+	printf("%s\n", (char*)cmap_get(int_map, (int[]){15}));
 	cmap_free(int_map);
 }
