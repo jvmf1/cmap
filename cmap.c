@@ -137,7 +137,7 @@ void cmap_print(cmap *m) {
 }
 
 cmap* cmap_resize(cmap *m, size_t size) {
-	cmap *new_map = cmap_create(size, m->compare_key_function, m->hash_function, m->free_data_function, m->free_key_function);
+	cmap *new_map = cmap_create(size, m->compare_key_function, m->hash_function, NULL, NULL);
 	if (new_map==NULL) return NULL;
 
 	for (size_t i=0;i<m->size;i++) {
@@ -151,5 +151,7 @@ cmap* cmap_resize(cmap *m, size_t size) {
 			tmp=tmp->next;
 		}
 	}
+	new_map->free_data_function=m->free_data_function;
+	new_map->free_key_function=m->free_key_function;
 	return new_map;
 }
