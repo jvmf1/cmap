@@ -32,15 +32,15 @@ size_t hash_int(void *p) {
 }
 
 int main() {
-	// cmap_create(map_size, compare_function, hash_function, free_data_function, free_key_function)
-	cmap *map = cmap_create(10, compare_str, hash_str, NULL, NULL);
+	// cmap_create(map_size, compare_function, hash_function
+	cmap *map = cmap_create(10, compare_str, hash_str);
 	cmap_insert(map, "key", "value");
 	printf("%s\n", (char*)cmap_get(map, "key"));
 	cmap_remove(map, "key");
 	printf("%p\n", cmap_get(map, "key"));
 	cmap_free(map);
 
-	cmap *int_map = cmap_create(10, compare_int, hash_int, NULL, NULL);
+	cmap *int_map = cmap_create(10, compare_int, hash_int);
 	cmap_insert(int_map, (int[]){15}, "fifteen");
 	printf("%s\n", (char*)cmap_get(int_map, (int[]){15}));
 	cmap_free(int_map);

@@ -17,8 +17,7 @@ typedef struct cmap {
 	size_t (*hash_function)(void*);
 } cmap;
 
-cmap* cmap_create(size_t size, bool (*compare_key_function)(void*,void*), size_t (*hash_function)(void*), void (*free_data_function)(void*),
-		void (*free_key_function)(void*));
+cmap* cmap_create(size_t size, bool (*compare_key_function)(void*,void*), size_t (*hash_function)(void*));
 
 void cmap_free(cmap *map);
 
