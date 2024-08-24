@@ -5,9 +5,7 @@
 #include <stdbool.h>
 
 bool compare_str(void *s, void*s2) {
-	if (strcmp((char*)s, (char*)s2) == 0)
-		return true;
-	return false;
+	return strcmp((char*)s, (char*)s2) == 0;
 }
 
 size_t hash_str(void *p) {
