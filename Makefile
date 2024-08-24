@@ -8,7 +8,7 @@ all: lib$(NAME).a lib$(NAME).so
 
 .PHONY: all clean install uninstall clean
 
-$(NAME).o: $(NAME).c
+%.o: %.c
 	$(CC) $(CFLAGS) $< -c
 
 lib$(NAME).a: $(NAME).o
@@ -23,7 +23,7 @@ install: lib$(NAME).a lib$(NAME).so
 	cp -f $^ $(LIBDESTDIR)
 	cp -f $(NAME).h $(INCLUDEDESTDIR)
 
-example: example.c lib$(NAME).a
+%: %.c lib$(NAME).a
 	$(CC) $(CFLAGS) $^ -o $@
 
 uninstall:
